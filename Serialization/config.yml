@@ -1,0 +1,45 @@
+#NoSQL database
+hyperDexCoordinator:
+  host: 10.1.10.51
+  port: 1980
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 8082
+  adminConnectors:
+    - type: http
+      port: 8083
+
+metrics:
+  reporters:
+    - type: graphite
+      host: 10.1.10.23
+      port: 2003
+      prefix: serialization1
+
+# Logging settings.
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+
+  # Logger-specific levels.
+  loggers:
+
+    # Sets the level for 'com.example.app' to DEBUG.
+    com.ltceng.serialization.resources: DEBUG
+
+  appenders:
+    - type: console
+      threshold: WARN
+      target:stderr
+      
+    - type: file
+      threshold: INFO
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+      currentLogFilename: ./application.log
+      archivedLogFilenamePattern: ./application-%d{yyyy-MM-dd}-%i.log.gz
+      archivedFileCount: 3
+      timeZone: UTC
+      maxFileSize: 10MB

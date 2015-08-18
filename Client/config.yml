@@ -1,0 +1,41 @@
+clientName: Client_1
+
+iterations: 100
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 9000
+  adminConnectors:
+    - type: http
+      port: 9001
+
+applicationServer:
+  host: 10.1.10.51
+  port: 8082
+
+# Logging settings.
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+
+  # Logger-specific levels.
+  loggers:
+
+    # Sets the level for 'com.example.app' to DEBUG.
+    com.ltceng.serialization.resources: DEBUG
+
+  appenders:
+    - type: console
+      threshold: WARN
+      target:stderr
+      
+    - type: file
+      threshold: INFO
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+      currentLogFilename: ./application.log
+      archivedLogFilenamePattern: ./application-%d{yyyy-MM-dd}-%i.log.gz
+      archivedFileCount: 3
+      timeZone: UTC
+      maxFileSize: 10MB

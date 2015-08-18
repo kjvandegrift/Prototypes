@@ -1,0 +1,7 @@
+Archive/
+*.class
+*.log
+*.project
+*.classpath
+*.jar
+*.*~
