@@ -1,7 +1,21 @@
+serverName: serialization51
+
 #NoSQL database
-hyperDexCoordinator:
-  host: 10.1.10.51
-  port: 1980
+noSqlStore:
+  storeName: serialization
+  durability:
+    masterSyncPolicy: SYNC
+    replicaSyncPolicy: NO_SYNC
+    replicaAckPolicy: NONE
+  consistency: 
+    type: ABSOLUTE
+  helperNodes:
+    - hostName: suter-lab2
+      port: 5000
+    - hostName: grm_lb_software_1
+      port: 5000
+    - hostName: grm_lb_software_2
+      port: 5000
 
 server:
   applicationConnectors:
@@ -22,7 +36,7 @@ metrics:
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: INFO
+  level: DEBUG
 
   # Logger-specific levels.
   loggers:
@@ -32,8 +46,8 @@ logging:
 
   appenders:
     - type: console
-      threshold: WARN
-      target:stderr
+      threshold: INFO
+      target: stderr
       
     - type: file
       threshold: INFO

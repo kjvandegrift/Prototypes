@@ -20,6 +20,7 @@
 		<dropwizard.version>0.9.0-rc3</dropwizard.version>
 		<metrics.version>3.1.0</metrics.version>
 		<mysql.connector.version>5.1.36</mysql.connector.version>
+		<oracle.client.version>3.2.5</oracle.client.version>
 		<mainClass>com.ltceng.serialization.SerializationApplication</mainClass>
 	</properties>
 
@@ -55,6 +56,13 @@
 			<artifactId>metrics-core</artifactId>
 			<version>${metrics.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.oracle.kv</groupId>
+			<artifactId>oracle-nosql-client</artifactId>
+			<version>${oracle.client.version}</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

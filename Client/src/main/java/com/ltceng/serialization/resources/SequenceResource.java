@@ -1,7 +1,5 @@
 package com.ltceng.serialization.resources;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import javax.ws.rs.GET;
@@ -11,16 +9,12 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.ltceng.serialization.ApplicationServerConfiguration;
+import com.ltceng.serialization.config.ApplicationServerConfiguration;
 import com.ltceng.serialization.core.Sequence;
 
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)
 public class SequenceResource {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SequenceResource.class);
 	private int iterations;
 	private Client client;
 	private ApplicationServerConfiguration applicationServerConfiguration;
