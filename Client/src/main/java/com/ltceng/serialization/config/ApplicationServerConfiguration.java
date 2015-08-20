@@ -1,4 +1,4 @@
-package com.ltceng.serialization;
+package com.ltceng.serialization.config;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -6,8 +6,6 @@ import javax.validation.constraints.Min;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.dropwizard.Configuration;
 
 public class ApplicationServerConfiguration {
     @NotEmpty

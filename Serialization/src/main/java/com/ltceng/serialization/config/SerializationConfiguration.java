@@ -1,4 +1,4 @@
-package com.ltceng.serialization;
+package com.ltceng.serialization.config;
 
 import io.dropwizard.Configuration;
 import io.dropwizard.client.JerseyClientConfiguration;
@@ -12,19 +12,29 @@ public class SerializationConfiguration extends Configuration {
     
 	@Valid
     @NotNull
-    @JsonProperty("hyperDexCoordinator")
-    private NoSqlFactory noSqlFactory = new NoSqlFactory();
+    @JsonProperty("noSqlStore")
+    private NoSqlStoreFactory noSqlStoreFactory = new NoSqlStoreFactory();
 
     @Valid
     @NotNull
     @JsonProperty("httpClient")
     private JerseyClientConfiguration httpClient = new JerseyClientConfiguration();
-   
-    public NoSqlFactory getHyperdexFactory() {
-    	return noSqlFactory;
-    }
+    
+	@Valid
+    @NotNull
+    @JsonProperty("serverName")
+    private String serverName;
         
     public JerseyClientConfiguration getJerseyClientConfiguration() {
         return httpClient;
     }
+
+	public NoSqlStoreFactory getNoSqlStoreFactory() {
+		return noSqlStoreFactory;
+	}
+	
+	public String getServerName() {
+		return serverName;
+	}
+	
 }
