@@ -8,11 +8,11 @@
 	</prerequisites>
 
 	<groupId>com.ltceng</groupId>
-	<artifactId>SerializationClientApplication</artifactId>
+	<artifactId>SerializationClient</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>SerializationClientApplication</name>
+	<name>SerializationClient</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

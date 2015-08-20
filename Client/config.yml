@@ -21,6 +21,13 @@ logging:
   level: INFO
 
   # Logger-specific levels.
+# Logging settings.
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: DEBUG
+
+  # Logger-specific levels.
   loggers:
 
     # Sets the level for 'com.example.app' to DEBUG.
@@ -28,8 +35,8 @@ logging:
 
   appenders:
     - type: console
-      threshold: WARN
-      target:stderr
+      threshold: INFO
+      target: stderr
       
     - type: file
       threshold: INFO
