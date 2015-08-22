@@ -39,8 +39,8 @@ public class NoSqlStoreFactory {
 
 	@Min(1)
 	@Max(65535)
-	@JsonProperty("requestRetryWarnLimit")
-	private int requestRetryWarnLimit = 1;
+	@JsonProperty("requestRetryLimit")
+	private int requestRetryLimit = 1;
 
 	@Valid
 	@NotNull
@@ -55,6 +55,10 @@ public class NoSqlStoreFactory {
 		return storeName;
 	}
 
+	public int getRequestRetryLimit() {
+		return requestRetryLimit;
+	}
+	
 	public KVStore build(Environment environment) {
 		String[] helpers = new String[helperNodes.size()];
 		int i = 0;
@@ -109,4 +113,5 @@ public class NoSqlStoreFactory {
 		}
 		return consistency;
 	}
+
 }

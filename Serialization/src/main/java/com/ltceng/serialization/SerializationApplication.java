@@ -1,5 +1,8 @@
 package com.ltceng.serialization;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.codahale.metrics.MetricRegistry;
 import com.ltceng.serialization.config.SerializationConfiguration;
 import com.ltceng.serialization.db.SequenceDAO;
@@ -12,6 +15,7 @@ import io.dropwizard.setup.Environment;
 import oracle.kv.KVStore;
 
 public class SerializationApplication extends Application<SerializationConfiguration> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SerializationApplication.class);
 	private static MetricRegistry metrics;
 
 	public static void main(final String[] args) throws Exception {
@@ -25,10 +29,11 @@ public class SerializationApplication extends Application<SerializationConfigura
 
 	@Override
 	public void run(final SerializationConfiguration configuration, final Environment environment) {
-		KVStore store = configuration.getNoSqlStoreFactory().build(environment);
+		final KVStore store = configuration.getNoSqlStoreFactory().build(environment);
 		final SequenceDAO sequenceDAO = new SequenceDAO(store, metrics);
 		environment.jersey().register(new SequenceResource(sequenceDAO));
 		environment.healthChecks().register(configuration.getServerName(), new DatabaseHealthCheck(store));
+		LOGGER.info("{} started.", configuration.getServerName());
 	}
 
 }

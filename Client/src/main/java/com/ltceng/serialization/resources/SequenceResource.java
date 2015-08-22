@@ -15,16 +15,13 @@ import com.ltceng.serialization.core.Sequence;
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)
 public class SequenceResource {
-	private int iterations;
 	private Client client;
 	private ApplicationServerConfiguration applicationServerConfiguration;
 	private static final String ALPHA_SEQUENCE_PATH = "alpha";
 	private static final String DIGIT_SEQUENCE_PATH = "digit";
 
-	public SequenceResource(Client client, int iterations,
-			ApplicationServerConfiguration applicationServerConfiguration) {
+	public SequenceResource(Client client, ApplicationServerConfiguration applicationServerConfiguration) {
 		this.client = client;
-		this.iterations = iterations;
 		this.applicationServerConfiguration = applicationServerConfiguration;
 	}
 
@@ -42,41 +39,6 @@ public class SequenceResource {
 		WebTarget target = client.target(getAppRootPath() + DIGIT_SEQUENCE_PATH);
 		Sequence sequence = target.request().get(Sequence.class);
 		return sequence.getSequence();
-	}
-
-	@GET
-	@Path("startSimulator")
-	public String startSimulator() {
-		StringBuilder retValue = new StringBuilder();
-		WebTarget alphaTarget = client.target(getAppRootPath() + ALPHA_SEQUENCE_PATH);
-		WebTarget digitTarget = client.target(getAppRootPath() + DIGIT_SEQUENCE_PATH);
-		Random rand = new Random();
-		for (int i = 0; i < iterations; i++) {
-			String sequence;
-			if (rand.nextBoolean()) {
-				Sequence alphaSequence = alphaTarget.request().get(Sequence.class);
-				sequence = alphaSequence.getSequence();
-			} else {
-				Sequence digitSequence = digitTarget.request().get(Sequence.class);
-				sequence = String.valueOf(digitSequence.getSequence());
-			}
-			retValue.append(sequence);
-			retValue.append(System.getProperty("line.separator"));
-			randomSleep(1000);
-		}
-		return retValue.toString();
-
-	}
-
-	private void randomSleep(int maxMilliSeconds) {
-		Random rand = new Random();
-
-		try {
-			Thread.sleep(rand.nextInt(maxMilliSeconds));
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-			return;
-		}
 	}
 
 	private String getAppRootPath() {

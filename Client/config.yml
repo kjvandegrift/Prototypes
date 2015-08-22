@@ -1,6 +1,4 @@
-clientName: Client_1
-
-iterations: 100
+clientName: client
 
 server:
   applicationConnectors:
@@ -13,25 +11,16 @@ server:
 applicationServer:
   host: 10.1.10.51
   port: 8082
+  healthCheckPort: 8083
 
 # Logging settings.
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: INFO
+  level: WARN
 
-  # Logger-specific levels.
-# Logging settings.
-logging:
-
-  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: DEBUG
-
-  # Logger-specific levels.
   loggers:
-
-    # Sets the level for 'com.example.app' to DEBUG.
-    com.ltceng.serialization.resources: DEBUG
+    com.ltceng.serialization.SerializationClientApplication: INFO
 
   appenders:
     - type: console

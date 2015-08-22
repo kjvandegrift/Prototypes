@@ -1,12 +1,12 @@
-serverName: serialization51
+serverName: serialization
 
 #NoSQL database
 noSqlStore:
   storeName: serialization
   durability:
     masterSyncPolicy: SYNC
-    replicaSyncPolicy: NO_SYNC
-    replicaAckPolicy: NONE
+    replicaSyncPolicy: SYNC
+    replicaAckPolicy: ALL
   consistency: 
     type: ABSOLUTE
   helperNodes:
@@ -30,24 +30,20 @@ metrics:
     - type: graphite
       host: 10.1.10.23
       port: 2003
-      prefix: serialization1
+      prefix: serialization
 
 # Logging settings.
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: DEBUG
+  level: WARN
 
-  # Logger-specific levels.
   loggers:
-
-    # Sets the level for 'com.example.app' to DEBUG.
-    com.ltceng.serialization.resources: DEBUG
+    com.ltceng.serialization.SerializationApplication: INFO
 
   appenders:
     - type: console
       threshold: INFO
-      target: stderr
       
     - type: file
       threshold: INFO

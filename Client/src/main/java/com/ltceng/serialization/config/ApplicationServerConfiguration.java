@@ -17,6 +17,10 @@ public class ApplicationServerConfiguration {
     @JsonProperty("port")
     private int port = 8080;
 
+    @Min(1)
+    @Max(65535)
+    @JsonProperty("healthCheckPort")
+    private int healthCheckPort = 8081;
 
     public String getHost() {
         return host;
@@ -24,5 +28,9 @@ public class ApplicationServerConfiguration {
 
     public int getPort() {
         return port;
+    }
+    
+    public int getHealthCheckPort() {
+        return healthCheckPort;
     }
 }

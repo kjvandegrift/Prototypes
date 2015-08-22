@@ -9,15 +9,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 public class SerializationClientConfiguration extends Configuration {
-	@NotNull
-	@Max(1000)
-	private int iterations = 1;
-	
-	@JsonProperty
-	public int getIterations() {
-		return iterations;
-	}
-	
 	@Valid
     @NotNull
     private JerseyClientConfiguration httpClient = new JerseyClientConfiguration();
