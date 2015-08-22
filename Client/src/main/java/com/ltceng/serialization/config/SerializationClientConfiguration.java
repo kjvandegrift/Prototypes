@@ -11,9 +11,9 @@ import javax.validation.constraints.*;
 public class SerializationClientConfiguration extends Configuration {
 	@Valid
     @NotNull
+    @JsonProperty("httpClient")
     private JerseyClientConfiguration httpClient = new JerseyClientConfiguration();
     
-    @JsonProperty("httpClient")
     public JerseyClientConfiguration getJerseyClientConfiguration() {
         return httpClient;
     }
@@ -26,6 +26,32 @@ public class SerializationClientConfiguration extends Configuration {
     
     public String getClientName() {
     	return clientName;
+    }
+    
+    @Valid
+    @Min(1)
+    @Max(1000)
+    @JsonProperty("iterations")
+    private int iterations;
+    
+    public int getInterations() {
+    	return iterations;
+    }
+    
+    @Valid
+    @Min(0)
+    private int minPause;
+    
+    public int getMinPause() {
+    	return minPause;
+    }
+    
+    @Valid
+    @Max(5000)
+    private int maxPause;
+    
+    public int getMaxPause() {
+    	return maxPause;
     }
        
     @Valid

@@ -1,5 +1,16 @@
 clientName: client
 
+iterations: 200
+
+minPause: 0
+maxPause: 1000
+
+httpClient:
+ # timeout: 10s
+  connectionTimeout: 10s
+ # connectionRequestTimeout: 10s
+ # retries: 10
+
 server:
   applicationConnectors:
     - type: http
