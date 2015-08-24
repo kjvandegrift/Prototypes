@@ -5,8 +5,8 @@ noSqlStore:
   storeName: serialization
   durability:
     masterSyncPolicy: SYNC
-    replicaSyncPolicy: SYNC
-    replicaAckPolicy: ALL
+    replicaSyncPolicy: WRITE_NO_SYNC
+    replicaAckPolicy: SIMPLE_MAJORITY
   consistency: 
     type: ABSOLUTE
   helperNodes:

@@ -23,6 +23,8 @@ import io.dropwizard.jersey.params.NonEmptyStringParam;
 @Produces(MediaType.APPLICATION_JSON)
 public class SequenceResource {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SequenceResource.class);
+	private static final String TYPE_ALPHA = "alpha";
+	private static final String TYPE_DIGIT = "digit";
 	private final SequenceDAO sequenceDAO;
 
 	public SequenceResource(SequenceDAO sequenceDAO) {
@@ -36,7 +38,13 @@ public class SequenceResource {
 	public Sequence initSequence(@PathParam("type") NonEmptyStringParam type) {
 		try {
 			LOGGER.trace("Init SequenceResource Type: {}", type.get().orNull());
-			return sequenceDAO.initSequence(type.get().orNull());
+			if (type.get().orNull().equals(TYPE_ALPHA)) {
+				return sequenceDAO.initAlphaSequence();
+			} else if (type.get().orNull().equals(TYPE_DIGIT)) {
+				return sequenceDAO.initDigitSequence();
+			} else {
+				throw new WebApplicationException(Status.NOT_FOUND);
+			}
 		} catch (Exception e) {
 			LOGGER.error("initSequence failed to complete due to error: {}", e.getMessage());
 			throw new WebApplicationException(Status.NOT_MODIFIED);
@@ -50,7 +58,13 @@ public class SequenceResource {
 	public Sequence updateSequence(@PathParam("type") NonEmptyStringParam type) {
 		LOGGER.trace("Update SequenceResource Type: {}", type.get().orNull());
 		try {
-			return sequenceDAO.updateSequence(type.get().orNull());
+			if (type.get().orNull().equals(TYPE_ALPHA)) {
+				return sequenceDAO.getNextAlphaSequence();
+			} else if (type.get().orNull().equals(TYPE_DIGIT)) {
+				return sequenceDAO.getNextDigitSequence();
+			} else {
+				throw new WebApplicationException(Status.NOT_FOUND);
+			}
 		} catch (Exception e) {
 			LOGGER.error("updateSequence failed to complete due to error: {}", e.getMessage());
 			throw new WebApplicationException(Status.NOT_FOUND);
