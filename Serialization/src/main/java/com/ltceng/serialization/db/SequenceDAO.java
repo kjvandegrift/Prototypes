@@ -42,7 +42,7 @@ public class SequenceDAO {
 		Version v = null;
 		int currWaitMillis = 0;
 		this.initValue = initValue;
-		Key key = (isAlpha) ? alphaKey : digitKey; 
+		Key key = (isAlpha) ? alphaKey : digitKey;
 		// Keep trying until we're successful or we time out
 		while (v == null) {
 			Value newVal = Value.createValue(initValue.getBytes());
@@ -59,15 +59,15 @@ public class SequenceDAO {
 				}
 			}
 		}
-		final ValueVersion valueVersion = store.get(key);
+		final ValueVersion valueVersion = store.get(key, Consistency.ABSOLUTE, 0, null);
 		return new Sequence(new String(valueVersion.getValue().getValue()));
 	}
-	
+
 	/**
 	 * Generate and return the next value for the globally unique sequence
 	 * number
 	 */
-	
+
 	public Sequence getNextSequence(boolean isAlpha) {
 		// Get the current value of the sequence number
 		ValueVersion currentSequenceNumber = getCurrentSequenceNum(isAlpha);
@@ -81,7 +81,7 @@ public class SequenceDAO {
 			nextSequenceNumber = incrementSequence(newSequenceNumber, isAlpha);
 			Value newVal = Value.createValue(nextSequenceNumber.getBytes());
 			try {
-				Key key = (isAlpha) ? alphaKey : digitKey; 
+				Key key = (isAlpha) ? alphaKey : digitKey;
 				v = store.putIfVersion(key, newVal, currentSequenceNumber.getVersion());
 			} catch (RequestTimeoutException e) {
 				try {
@@ -96,7 +96,7 @@ public class SequenceDAO {
 			// Someone got in there and incremented the sequence number
 			// before we could. We'll have to try again.
 			if (v == null) {
-				currentSequenceNumber = getCurrentSequenceNum(isAlpha);	
+				currentSequenceNumber = getCurrentSequenceNum(isAlpha);
 			}
 		}
 		return new Sequence(nextSequenceNumber);
@@ -104,7 +104,7 @@ public class SequenceDAO {
 
 	private ValueVersion getCurrentSequenceNum(boolean isAlpha) {
 		// Retrieve the current value of the global sequence number
-		Key key = (isAlpha) ? alphaKey : digitKey; 
+		Key key = (isAlpha) ? alphaKey : digitKey;
 		ValueVersion currentSequenceNumber = store.get(key, Consistency.ABSOLUTE, 0, null);
 		int currWaitMillis = 0;
 
@@ -149,7 +149,7 @@ public class SequenceDAO {
 			return incrementDigitSequence(current);
 		}
 	}
-	
+
 	private String incrementAlphaSequence(String current) {
 		String next = null;
 		long number;
