@@ -36,10 +36,11 @@ metrics:
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: WARN
+  level: DEBUG
 
   loggers:
-    com.ltceng.serialization.SerializationApplication: INFO
+    com.ltceng.serialization.SerializationApplication: DEBUG
+    com.ltceng.serialization.resources.SequenceResource: DEBUG
 
   appenders:
     - type: console

@@ -1,5 +1,8 @@
 package com.ltceng.serialization.resources;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -34,21 +37,38 @@ public class SequenceResource {
 	@POST
 	@Timed
 	@ExceptionMetered
-	@Path("/{type}")
-	public Sequence initSequence(@PathParam("type") NonEmptyStringParam type) {
-		try {
-			LOGGER.trace("Init SequenceResource Type: {}", type.get().orNull());
-			if (type.get().orNull().equals(TYPE_ALPHA)) {
-				return sequenceDAO.initAlphaSequence();
-			} else if (type.get().orNull().equals(TYPE_DIGIT)) {
-				return sequenceDAO.initDigitSequence();
+	@Path("/{type}/{sequence}")
+	public Sequence initSequence(@PathParam("type") NonEmptyStringParam type,
+			@PathParam("sequence") NonEmptyStringParam sequence) {
+
+		LOGGER.debug("Init SequenceResource Type: {}", type.get().orNull());
+		boolean isAlpha;
+		if (type.get().orNull().equals(TYPE_ALPHA)) {
+			Pattern pattern = Pattern.compile("[A-Z]+");
+			Matcher m = pattern.matcher(sequence.get().orNull());
+			if (m.matches()) {
+				isAlpha = true;
 			} else {
-				throw new WebApplicationException(Status.NOT_FOUND);
+				throw new WebApplicationException(Status.BAD_REQUEST);
 			}
+		} else if (type.get().orNull().equals(TYPE_DIGIT)) {
+			Pattern pattern = Pattern.compile("[0-9]+");
+			Matcher m = pattern.matcher(sequence.get().orNull());
+			if (m.matches()) {
+				isAlpha = false;
+			} else {
+				throw new WebApplicationException(Status.BAD_REQUEST);
+			}
+		} else {
+			throw new WebApplicationException(Status.NOT_FOUND);
+		}
+		try {
+			return sequenceDAO.initSequence(isAlpha, sequence.get().orNull());
 		} catch (Exception e) {
 			LOGGER.error("initSequence failed to complete due to error: {}", e.getMessage());
 			throw new WebApplicationException(Status.NOT_MODIFIED);
 		}
+
 	}
 
 	@GET
@@ -56,15 +76,17 @@ public class SequenceResource {
 	@ExceptionMetered
 	@Path("/{type}")
 	public Sequence updateSequence(@PathParam("type") NonEmptyStringParam type) {
-		LOGGER.trace("Update SequenceResource Type: {}", type.get().orNull());
+		LOGGER.debug("Update SequenceResource Type: {}", type.get().orNull());
 		try {
+			boolean isAlpha;
 			if (type.get().orNull().equals(TYPE_ALPHA)) {
-				return sequenceDAO.getNextAlphaSequence();
+				isAlpha = true;
 			} else if (type.get().orNull().equals(TYPE_DIGIT)) {
-				return sequenceDAO.getNextDigitSequence();
+				isAlpha = false;
 			} else {
 				throw new WebApplicationException(Status.NOT_FOUND);
 			}
+			return sequenceDAO.getNextSequence(isAlpha);
 		} catch (Exception e) {
 			LOGGER.error("updateSequence failed to complete due to error: {}", e.getMessage());
 			throw new WebApplicationException(Status.NOT_FOUND);

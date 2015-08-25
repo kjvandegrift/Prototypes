@@ -1,4 +1,4 @@
-clientName: client
+clientName: client512
 
 iterations: 200
 
@@ -14,13 +14,13 @@ httpClient:
 server:
   applicationConnectors:
     - type: http
-      port: 9000
+      port: 9012
   adminConnectors:
     - type: http
-      port: 9001
+      port: 9112
 
 applicationServer:
-  host: 10.1.10.51
+  host: 10.1.10.23
   port: 8082
   healthCheckPort: 8083
 
@@ -28,7 +28,7 @@ applicationServer:
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: WARN
+  level: DEBUG
 
   loggers:
     com.ltceng.serialization.SerializationClientApplication: INFO
