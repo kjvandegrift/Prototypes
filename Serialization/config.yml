@@ -9,6 +9,8 @@ noSqlStore:
     replicaAckPolicy: SIMPLE_MAJORITY
   consistency: 
     type: ABSOLUTE
+  maxTimeoutWait: 5000
+  attemptTimeoutWait: 500
   helperNodes:
     - hostName: suter-lab2
       port: 5000
@@ -24,6 +26,8 @@ server:
   adminConnectors:
     - type: http
       port: 8083
+  requestLog:
+    appenders: []
 
 metrics:
   reporters:
@@ -36,18 +40,22 @@ metrics:
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: DEBUG
+  level: WARN
 
   loggers:
-    com.ltceng.serialization.SerializationApplication: DEBUG
+    com.ltceng.serialization.SerializationApplication: INFO
     com.ltceng.serialization.resources.SequenceResource: DEBUG
+    com.ltceng.serialization.db.SequenceDAO: TRACE
 
   appenders:
     - type: console
-      threshold: INFO
+      threshold: ALL
+      timeZone: UTC
+      target: stdout
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
       
     - type: file
-      threshold: INFO
+      threshold: ALL
       logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
       currentLogFilename: ./application.log
       archivedLogFilenamePattern: ./application-%d{yyyy-MM-dd}-%i.log.gz

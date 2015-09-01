@@ -38,9 +38,14 @@ public class NoSqlStoreFactory {
 	private ConsistencyPolicy consistencyPolicy;
 
 	@Min(1)
-	@Max(65535)
-	@JsonProperty("requestRetryLimit")
-	private int requestRetryLimit = 1;
+	@Max(60000)
+	@JsonProperty("maxTimeoutWait")
+	private int maxTimeoutWait = 5000;
+	
+	@Min(1)
+	@Max(10000)
+	@JsonProperty("attemptTimeoutWait")
+	private int attemptTimeoutWait = 500;
 
 	@Valid
 	@NotNull
@@ -55,8 +60,12 @@ public class NoSqlStoreFactory {
 		return storeName;
 	}
 
-	public int getRequestRetryLimit() {
-		return requestRetryLimit;
+	public int getMaxTimeoutWait() {
+		return maxTimeoutWait;
+	}
+	
+	public int getAttemptTimeoutWait() {
+		return maxTimeoutWait;
 	}
 	
 	public KVStore build(Environment environment) {

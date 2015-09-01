@@ -18,6 +18,8 @@ server:
   adminConnectors:
     - type: http
       port: 9112
+  requestLog:
+    appenders: []
 
 applicationServer:
   host: 10.1.10.23
@@ -28,18 +30,20 @@ applicationServer:
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: DEBUG
+  level: WARN
 
   loggers:
     com.ltceng.serialization.SerializationClientApplication: INFO
 
   appenders:
     - type: console
-      threshold: INFO
+      threshold: ALL
+      timeZone: UTC
       target: stderr
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
       
     - type: file
-      threshold: INFO
+      threshold: ALL
       logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
       currentLogFilename: ./application.log
       archivedLogFilenamePattern: ./application-%d{yyyy-MM-dd}-%i.log.gz

@@ -1,6 +1,5 @@
 package com.ltceng.serialization.resources;
 
-import java.net.SocketTimeoutException;
 import java.util.Random;
 
 import javax.ws.rs.GET;
@@ -43,6 +42,7 @@ public class SequenceResource {
 	public String getAlphaSequence() {
 		WebTarget target = client.target(getAppRootPath() + ALPHA_SEQUENCE_PATH);
 		Sequence sequence = target.request().get(Sequence.class);
+		LOGGER.trace("Received alpha sequence: {}", sequence.getSequence());
 		return sequence.getSequence();
 	}
 
@@ -51,12 +51,14 @@ public class SequenceResource {
 	public String getDigitSequence() {
 		WebTarget target = client.target(getAppRootPath() + DIGIT_SEQUENCE_PATH);
 		Sequence sequence = target.request().get(Sequence.class);
+		LOGGER.trace("Received digit sequence: {}", sequence.getSequence());
 		return sequence.getSequence();
 	}
 
 	@GET
 	@Path("startSimulator")
 	public String startSimulator() {
+		LOGGER.trace("Simulator started.");
 		StringBuilder retValue = new StringBuilder();
 
 		Random rand = new Random();
@@ -85,6 +87,7 @@ public class SequenceResource {
 			retValue.append(System.getProperty("line.separator"));
 			randomSleep();
 		}
+		LOGGER.trace("Simulator Finished.");
 		return retValue.toString();
 
 	}
