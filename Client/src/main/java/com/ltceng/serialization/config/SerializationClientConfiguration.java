@@ -20,12 +20,12 @@ public class SerializationClientConfiguration extends Configuration {
     
     @Valid
     @NotNull
-    @JsonProperty("clientName")
-    private String clientName;
+    @JsonProperty("appName")
+    private String appName;
     
     
-    public String getClientName() {
-    	return clientName;
+    public String getAppName() {
+    	return appName;
     }
     
     @Valid

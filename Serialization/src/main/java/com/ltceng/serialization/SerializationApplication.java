@@ -16,7 +16,7 @@ import oracle.kv.KVStore;
 
 public class SerializationApplication extends Application<SerializationConfiguration> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SerializationApplication.class);
-	private static MetricRegistry metrics;
+	private MetricRegistry metrics;
 
 	public static void main(final String[] args) throws Exception {
 		new SerializationApplication().run(args);
@@ -33,8 +33,8 @@ public class SerializationApplication extends Application<SerializationConfigura
 		final SequenceDAO sequenceDAO = new SequenceDAO(store, configuration.getNoSqlStoreFactory().getMaxTimeoutWait(),
 				configuration.getNoSqlStoreFactory().getAttemptTimeoutWait(), metrics);
 		environment.jersey().register(new SequenceResource(sequenceDAO));
-		environment.healthChecks().register(configuration.getServerName(), new DatabaseHealthCheck(store));
-		LOGGER.info("{} started.", configuration.getServerName());
+		environment.healthChecks().register(configuration.getAppName(), new DatabaseHealthCheck(store));
+		LOGGER.info("{} started.", configuration.getAppName());
 	}
 
 }

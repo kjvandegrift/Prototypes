@@ -11,7 +11,6 @@ import com.ltceng.serialization.resources.SequenceResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.client.JerseyClientBuilder;
-import io.dropwizard.lifecycle.Managed;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
@@ -29,12 +28,12 @@ public class SerializationClientApplication extends Application<SerializationCli
 	@Override
 	public void run(final SerializationClientConfiguration configuration, final Environment environment) {
 		final Client client = new JerseyClientBuilder(environment).using(configuration.getJerseyClientConfiguration())
-				.build(configuration.getClientName());
+				.build(configuration.getAppName());
 		environment.jersey()
 				.register(new SequenceResource(client, configuration.getInterations(), configuration.getMinPause(),
 						configuration.getMaxPause(), configuration.getApplicationServerConfiguration()));
-		environment.healthChecks().register(configuration.getClientName(),
+		environment.healthChecks().register(configuration.getAppName(),
 				new ConnectionHealthCheck(client, configuration.getApplicationServerConfiguration()));
-		LOGGER.info("{} started.", configuration.getClientName());
+		LOGGER.info("{} started.", configuration.getAppName());
 	}
 }

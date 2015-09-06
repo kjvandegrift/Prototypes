@@ -32,6 +32,12 @@
 			<artifactId>dropwizard-core</artifactId>
 			<version>${dropwizard.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>co.escapeideas.maven</groupId>
+			<artifactId>ansible-maven-plugin</artifactId>
+			<version>1.2.0</version>
+			<type>maven-plugin</type>
+		</dependency>		
 	</dependencies>
 
 	<build>

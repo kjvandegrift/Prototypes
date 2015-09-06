@@ -22,8 +22,8 @@ public class SerializationConfiguration extends Configuration {
     
 	@Valid
     @NotNull
-    @JsonProperty("serverName")
-    private String serverName;
+    @JsonProperty("appName")
+    private String appName;
         
     public JerseyClientConfiguration getJerseyClientConfiguration() {
         return httpClient;
@@ -33,8 +33,8 @@ public class SerializationConfiguration extends Configuration {
 		return noSqlStoreFactory;
 	}
 	
-	public String getServerName() {
-		return serverName;
+	public String getAppName() {
+		return appName;
 	}
 	
 }

@@ -149,21 +149,19 @@ public class SequenceDAO {
 	}
 
 	private String incrementAlphaSequence(String current) {
-		String next = null;
 		long number;
 		number = toNumber(current);
-		next = toAlpha(++number);
+		number++;
 		alphaCounter.inc();
-		return next;
+		return toAlpha(number);
 	}
-
+	
 	private String incrementDigitSequence(String current) {
-		String next = null;
 		long number;
 		number = Long.parseLong(current);
-		next = String.valueOf(++number);
+		number++;
 		digitCounter.inc();
-		return next;
+		return String.valueOf(number);
 	}
 
 	private long toNumber(String name) {

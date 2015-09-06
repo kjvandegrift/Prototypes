@@ -1,4 +1,4 @@
-serverName: serialization
+appName: serialization
 
 #NoSQL database
 noSqlStore:
@@ -22,17 +22,17 @@ noSqlStore:
 server:
   applicationConnectors:
     - type: http
-      port: 8082
+      port: 8511
   adminConnectors:
     - type: http
-      port: 8083
+      port: 9511
   requestLog:
     appenders: []
 
 metrics:
   reporters:
     - type: graphite
-      host: 10.1.10.23
+      host: 10.1.10.51
       port: 2003
       prefix: serialization
 

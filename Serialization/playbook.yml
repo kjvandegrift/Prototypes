@@ -1,0 +1,42 @@
+- hosts: all
+
+  vars:
+    srcDir: "/home/kvandegrift/Prototypes/Serialization/"
+    targetDir: "/home/kvandegrift/Deployed/Server"
+    nodeId: "{{ ansible_eth0.ipv4.address.split('.')[-1] }}"
+    appIds: 
+      - "{{ nodeId }}"
+
+  tasks:
+    - name: Create deployment folders.
+      file: path={{ targetDir }}{{ item }} state=absentls
+
+      file: path={{ targetDir }}{{ item }} state=directory
+      with_items:
+        - "{{ appIds }}"
+    - name: Deploy config files.
+      copy:  src={{ item[0] }} dest={{ targetDir }}{{ item[1] }}
+      with_nested:
+        - "{{ srcDir }}/config.yml"
+        - appIds
+    - name: Deploy app files.
+      copy:  src={{ item[0] }} dest={{ targetDir }}{{ item[1] }}
+      with_nested:
+        - "{{ srcDir }}/target/Serialization-1.0-SNAPSHOT.jar"
+        - appIds
+    - name: Update node name in config file.
+      replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^appName: serialization" replace="appName: Serialization{{ item }}"'
+      with_items:
+        - "{{ appIds }}"
+    - name: Update node name in config file.
+      replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^      prefix: serialization" replace="      prefix: Serialization{{ item }}"'
+      with_items:
+        - "{{ appIds }}"
+    - name: Update app connector port in config file.
+      replace: 'dest={{ targetDir }}/config.yml regexp="^      port: 8511" replace="      port: 8{{ item }}"'
+      with_items:
+        - "{{ appIds }}"
+    - name: Update app connector port in config file.
+      replace: 'dest={{ targetDir }}/config.yml regexp="^      port: 9511" replace="      port: 9{{ item }}"'
+      with_items:
+        - "{{ appIds }}"

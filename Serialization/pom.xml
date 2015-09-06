@@ -61,8 +61,12 @@
 			<artifactId>oracle-nosql-client</artifactId>
 			<version>${oracle.client.version}</version>
 		</dependency>
-
-
+		<dependency>
+			<groupId>co.escapeideas.maven</groupId>
+			<artifactId>ansible-maven-plugin</artifactId>
+			<version>1.2.0</version>
+			<type>maven-plugin</type>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -165,6 +169,19 @@
 						</plugin>
 					</reportPlugins>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>co.escapeideas.maven</groupId>
+				<artifactId>ansible-maven-plugin</artifactId>
+				<version>1.2.0</version>
+				<executions>
+					<execution>
+						<id>ansible-playbook</id>
+						<goals>
+							<goal>playbook</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

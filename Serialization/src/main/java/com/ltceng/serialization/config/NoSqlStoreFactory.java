@@ -65,7 +65,7 @@ public class NoSqlStoreFactory {
 	}
 	
 	public int getAttemptTimeoutWait() {
-		return maxTimeoutWait;
+		return attemptTimeoutWait;
 	}
 	
 	public KVStore build(Environment environment) {
