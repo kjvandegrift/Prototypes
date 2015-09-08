@@ -33,10 +33,10 @@
       with_items:
         - "{{ appIds }}"
     - name: Update app connector port in config file.
-      replace: 'dest={{ targetDir }}/config.yml regexp="^      port: 8511" replace="      port: 8{{ item }}"'
+      replace: 'dest={{ targetDir }}/config.yml regexp="^      port: 8202" replace="      port: 8{{ item }}"'
       with_items:
         - "{{ appIds }}"
     - name: Update app connector port in config file.
-      replace: 'dest={{ targetDir }}/config.yml regexp="^      port: 9511" replace="      port: 9{{ item }}"'
+      replace: 'dest={{ targetDir }}/config.yml regexp="^      port: 9202" replace="      port: 9{{ item }}"'
       with_items:
         - "{{ appIds }}"

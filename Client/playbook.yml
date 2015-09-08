@@ -30,25 +30,25 @@
       with_items:
         - "{{ appIds }}"
     - name: Update app port in config file.
-      replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^      port: 6511" replace="      port: 6{{ item }}"'
+      replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^      port: 6202" replace="      port: 6{{ item }}"'
       with_items:
         - "{{ appIds }}"
     - name: Update app admin port in config file.
-      replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^      port: 7511" replace="      port: 7{{ item }}"'
+      replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^      port: 7202" replace="      port: 7{{ item }}"'
       with_items:
         - "{{ appIds }}"
     - name: Update app server ip in config file.
-      replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^  host: 10.1.10.51" replace="  host: {{ ansible_eth0.ipv4.address }}"'
+      replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^  host: 10.1.10.202" replace="  host: {{ ansible_eth0.ipv4.address }}"'
       with_items:
         - "{{ appIds }}"
 
     - name: Update app server port in config file.
-      replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^  port: 8511" replace="  port: 8{{ nodeId }}1"'
+      replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^  port: 8202" replace="  port: 8{{ nodeId }}1"'
       with_items:
         - "{{ appIds }}"
 
     - name: Update app server health check port in config file.
-      replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^  healthCheckPort: 9511" replace="  healthCheckPort: 9{{ nodeId }}1"'
+      replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^  healthCheckPort: 9202" replace="  healthCheckPort: 9{{ nodeId }}1"'
       with_items:
         - "{{ appIds }}"
 

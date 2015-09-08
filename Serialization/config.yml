@@ -22,17 +22,17 @@ noSqlStore:
 server:
   applicationConnectors:
     - type: http
-      port: 8511
+      port: 8202
   adminConnectors:
     - type: http
-      port: 9511
+      port: 9202
   requestLog:
     appenders: []
 
 metrics:
   reporters:
     - type: graphite
-      host: 10.1.10.51
+      host: 10.1.10.202
       port: 2003
       prefix: serialization
 

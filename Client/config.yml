@@ -14,17 +14,17 @@ httpClient:
 server:
   applicationConnectors:
     - type: http
-      port: 6511
+      port: 6202
   adminConnectors:
     - type: http
-      port: 7511
+      port: 7202
   requestLog:
     appenders: []
 
 applicationServer:
   host: 10.1.10.51
-  port: 8511
-  healthCheckPort: 9511
+  port: 8202
+  healthCheckPort: 9202
 
 # Logging settings.
 logging:
