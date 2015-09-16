@@ -9,7 +9,7 @@
 
   tasks:
     - name: Create deployment folders.
-      file: path={{ targetDir }}{{ item }} state=absentls
+      file: path={{ targetDir }}{{ item }} state=absent
 
       file: path={{ targetDir }}{{ item }} state=directory
       with_items:
@@ -30,13 +30,5 @@
         - "{{ appIds }}"
     - name: Update node name in config file.
       replace: 'dest={{ targetDir }}{{ item }}/config.yml regexp="^      prefix: serialization" replace="      prefix: Serialization{{ item }}"'
-      with_items:
-        - "{{ appIds }}"
-    - name: Update app connector port in config file.
-      replace: 'dest={{ targetDir }}/config.yml regexp="^      port: 8202" replace="      port: 8{{ item }}"'
-      with_items:
-        - "{{ appIds }}"
-    - name: Update app connector port in config file.
-      replace: 'dest={{ targetDir }}/config.yml regexp="^      port: 9202" replace="      port: 9{{ item }}"'
       with_items:
         - "{{ appIds }}"

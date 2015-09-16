@@ -12,20 +12,26 @@ noSqlStore:
   maxTimeoutWait: 5000
   attemptTimeoutWait: 500
   helperNodes:
-    - hostName: suter-lab2
+    - hostName: node1
       port: 5000
-    - hostName: grm_lb_software_1
+    - hostName: node2
       port: 5000
-    - hostName: grm_lb_software_2
+    - hostName: node3
+      port: 5000
+    - hostName: node4
+      port: 5000
+    - hostName: node5
+      port: 5000
+    - hostName: node6
       port: 5000
 
 server:
   applicationConnectors:
     - type: http
-      port: 8202
+      port: 8000
   adminConnectors:
     - type: http
-      port: 9202
+      port: 9000
   requestLog:
     appenders: []
 

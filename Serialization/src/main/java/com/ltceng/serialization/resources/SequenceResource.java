@@ -76,7 +76,6 @@ public class SequenceResource {
 	@ExceptionMetered
 	@Path("/{type}")
 	public Sequence updateSequence(@PathParam("type") NonEmptyStringParam type) {
-		LOGGER.debug("Update SequenceResource Type: {}", type.get().orNull());
 		try {
 			boolean isAlpha;
 			if (type.get().orNull().equals(TYPE_ALPHA)) {

@@ -17,10 +17,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<dropwizard.version>0.9.0-rc3</dropwizard.version>
-		<metrics.version>3.1.0</metrics.version>
-		<mysql.connector.version>5.1.36</mysql.connector.version>
+		<dropwizard.version>0.9.0-rc4</dropwizard.version>
+		<metrics.version>3.1.2</metrics.version>
 		<oracle.client.version>3.2.5</oracle.client.version>
+		<ansible.maven.version>1.2.0</ansible.maven.version>
 		<mainClass>com.ltceng.serialization.SerializationApplication</mainClass>
 	</properties>
 
@@ -64,7 +64,7 @@
 		<dependency>
 			<groupId>co.escapeideas.maven</groupId>
 			<artifactId>ansible-maven-plugin</artifactId>
-			<version>1.2.0</version>
+			<version>${ansible.maven.version}</version>
 			<type>maven-plugin</type>
 		</dependency>
 	</dependencies>

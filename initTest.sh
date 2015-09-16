@@ -1,6 +1,6 @@
 #!/bin/bash
 clear
-curl -X POST http://10.1.10.51:8082/sequences/alpha/ZZ
+curl -X POST http://10.1.10.23:8000/sequences/alpha/ZZZ
 echo ""
-curl -X POST http://10.1.10.51:8082/sequences/digit/99
+curl -X POST http://10.1.10.23:8000/sequences/digit/999
 echo ""
