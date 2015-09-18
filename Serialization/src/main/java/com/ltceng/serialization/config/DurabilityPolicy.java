@@ -18,6 +18,13 @@ public class DurabilityPolicy {
 	@JsonProperty("replicaAckPolicy")
 	private String replicaAckPolicy;
 
+	@JsonProperty
+	private long timeout = 0L;
+	
+	@Pattern(regexp = "DAYS|HOURS|MICROSECONDS|MILLISECONDS|MINUTES|NANOSECONDS|SECONDS")
+	@JsonProperty
+	private String timeoutUnit;	
+	
 	public String getMasterSyncPolicy() {
 		return masterSyncPolicy;
 	}
@@ -30,4 +37,12 @@ public class DurabilityPolicy {
 		return replicaAckPolicy;
 	}
 
+	public long getTimeout() {
+		return timeout;
+	}
+
+	public String getTimeoutUnit() {
+		return timeoutUnit;
+	}	
+	
 }

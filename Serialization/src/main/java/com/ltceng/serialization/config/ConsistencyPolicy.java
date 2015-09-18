@@ -18,7 +18,7 @@ public class ConsistencyPolicy {
 	private String permissibleLagUnit;
 	
 	@JsonProperty
-	private long timeout;
+	private long timeout = 0L;
 	
 	@Pattern(regexp = "DAYS|HOURS|MICROSECONDS|MILLISECONDS|MINUTES|NANOSECONDS|SECONDS")
 	@JsonProperty

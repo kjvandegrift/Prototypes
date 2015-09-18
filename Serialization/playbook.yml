@@ -1,16 +1,18 @@
 - hosts: all
 
   vars:
-    srcDir: "/home/kvandegrift/Prototypes/Serialization/"
+    srcDir: "/home/kvandegrift/Prototypes/Serialization"
     targetDir: "/home/kvandegrift/Deployed/Server"
     nodeId: "{{ ansible_eth0.ipv4.address.split('.')[-1] }}"
     appIds: 
       - "{{ nodeId }}"
 
   tasks:
-    - name: Create deployment folders.
+    - name: Clean deployment folders.
       file: path={{ targetDir }}{{ item }} state=absent
-
+      with_items:
+        - "{{ appIds }}"
+    - name: Create deployment folders.
       file: path={{ targetDir }}{{ item }} state=directory
       with_items:
         - "{{ appIds }}"

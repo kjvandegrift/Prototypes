@@ -1,7 +1,7 @@
 - hosts: all
 
   vars:
-    srcDir: "/home/kvandegrift/Prototypes/Client/"
+    srcDir: "/home/kvandegrift/Prototypes/Client"
     targetDir: "/home/kvandegrift/Deployed/Client"
     nodeId: "{{ ansible_eth0.ipv4.address.split('.')[-1] }}"
     appIds: 
@@ -9,9 +9,11 @@
       - "{{ nodeId }}2"
 
   tasks:
+    - name: Clean deployment folders.
+      file: path={{ targetDir }}{{ item }} state=absent
+      with_items:
+        - "{{ appIds }}"
     - name: Create deployment folders.
-      file: path={{ targetDir }}{{ item }} state=absentls
-
       file: path={{ targetDir }}{{ item }} state=directory
       with_items:
         - "{{ appIds }}"

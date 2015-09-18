@@ -4,11 +4,13 @@ appName: serialization
 noSqlStore:
   storeName: serialization
   durability:
-    masterSyncPolicy: SYNC
+    masterSyncPolicy: WRITE_NO_SYNC
     replicaSyncPolicy: WRITE_NO_SYNC
     replicaAckPolicy: SIMPLE_MAJORITY
   consistency: 
     type: ABSOLUTE
+    timeout: 10
+    timeoutUnit: SECONDS 
   maxTimeoutWait: 5000
   attemptTimeoutWait: 500
   helperNodes:

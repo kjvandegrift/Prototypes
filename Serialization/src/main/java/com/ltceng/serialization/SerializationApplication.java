@@ -30,8 +30,7 @@ public class SerializationApplication extends Application<SerializationConfigura
 	@Override
 	public void run(final SerializationConfiguration configuration, final Environment environment) {
 		final KVStore store = configuration.getNoSqlStoreFactory().build(environment);
-		final SequenceDAO sequenceDAO = new SequenceDAO(store, configuration.getNoSqlStoreFactory().getMaxTimeoutWait(),
-				configuration.getNoSqlStoreFactory().getAttemptTimeoutWait(), metrics);
+		final SequenceDAO sequenceDAO = new SequenceDAO(store, configuration.getNoSqlStoreFactory(), metrics);
 		environment.jersey().register(new SequenceResource(sequenceDAO));
 		environment.healthChecks().register(configuration.getAppName(), new DatabaseHealthCheck(store));
 		LOGGER.info("{} started.", configuration.getAppName());

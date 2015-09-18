@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
+import com.ltceng.serialization.config.StoreFactory;
 import com.ltceng.serialization.core.Sequence;
 
-import oracle.kv.Consistency;
 import oracle.kv.KVStore;
 import oracle.kv.Key;
 import oracle.kv.RequestTimeoutException;
@@ -21,8 +21,7 @@ public class SequenceDAO {
 	private static final String KEY_DIGIT = "digit";
 	private static final String DEFAULT_INIT_ALPHA = "ZZ";
 	private static final String DEFAULT_INIT_DIGIT = "99";
-	private final int maxTimeoutWait;
-	private final int attemptTimeoutWait;
+	private final StoreFactory storeFactory;
 	private final Counter alphaCounter;
 	private final Counter digitCounter;
 	private final Counter requestTimeouts;
@@ -31,16 +30,15 @@ public class SequenceDAO {
 	private final Key alphaKey;
 	private final Key digitKey;
 	private String initValue;
-	
 
-	public SequenceDAO(KVStore store, int maxTimeoutWait, int attemptTimeoutWait, MetricRegistry metrics) {
+	public SequenceDAO(KVStore store, StoreFactory storeFactory, MetricRegistry metrics) {
 		this.store = store;
-		this.maxTimeoutWait = maxTimeoutWait;
-		this.attemptTimeoutWait = attemptTimeoutWait;
+		this.storeFactory = storeFactory;
 		this.alphaCounter = metrics.counter("com.ltceng.serialization.SequenceDAO.counter.alpha");
 		this.digitCounter = metrics.counter("com.ltceng.serialization.SequenceDAO.counter.digit");
 		this.requestTimeouts = metrics.counter("com.ltceng.serialization.SequenceDAO.counter.requestTimeouts");
-		this.storeSequenceCollision = metrics.counter("com.ltceng.serialization.SequenceDAO.counter.storeSequenceCollision");
+		this.storeSequenceCollision = metrics
+				.counter("com.ltceng.serialization.SequenceDAO.counter.storeSequenceCollision");
 		alphaKey = Key.createKey(KEY_ALPHA);
 		digitKey = Key.createKey(KEY_DIGIT);
 	}
@@ -52,8 +50,6 @@ public class SequenceDAO {
 		final ValueVersion valueVersion = getCurrentSequenceNum(isAlpha, key);
 		return new Sequence(new String(valueVersion.getValue().getValue()));
 	}
-
-
 
 	/**
 	 * Generate and return the next value for the globally unique sequence
@@ -74,24 +70,25 @@ public class SequenceDAO {
 			nextSequenceNumber = incrementSequence(sequenceNumber, isAlpha);
 			Value valueNextSequenceNumber = Value.createValue(nextSequenceNumber.getBytes());
 			try {
-				version = store.putIfVersion(key, valueNextSequenceNumber, valueVersionCurrentSequenceNumber.getVersion());
+				version = store.putIfVersion(key, valueNextSequenceNumber,
+						valueVersionCurrentSequenceNumber.getVersion());
 			} catch (RequestTimeoutException e) {
 				currWaitMillis = handleRequestTimeout(currWaitMillis, e);
 			}
-			// Someone got in there and incremented the sequence number
-			// before we could. We'll have to try again.
+			// Collision occurred, try again.
 			if (version == null) {
 				storeSequenceCollision.inc();
 				LOGGER.trace("Attempted to store incremented sequence {} but it already existed.", nextSequenceNumber);
-				valueVersionCurrentSequenceNumber = getCurrentSequenceNum(isAlpha,key);
+				valueVersionCurrentSequenceNumber = getCurrentSequenceNum(isAlpha, key);
 			}
 		}
 		return new Sequence(nextSequenceNumber);
 	}
 
 	private ValueVersion getCurrentSequenceNum(boolean isAlpha, Key key) {
-		// Retrieve the current value of the global sequence number
-		ValueVersion currentSequenceNumber = store.get(key, Consistency.ABSOLUTE, 0, null);
+		// Get the current value of the sequence number
+		ValueVersion currentSequenceNumber = store.get(key, storeFactory.getConsistency(),
+				storeFactory.getConsistencyTimeout(), storeFactory.getConsistencyTimeoutUnit());
 		int currWaitMillis = 0;
 
 		// No one has created it yet, we'll go and create it now
@@ -105,10 +102,12 @@ public class SequenceDAO {
 					Version seqVersion = store.putIfAbsent(key, value);
 					if (seqVersion == null) {
 						// Someone got here before us
-						currentSequenceNumber = store.get(key, Consistency.ABSOLUTE, 0, null);
+						currentSequenceNumber = store.get(key, storeFactory.getConsistency(),
+								storeFactory.getConsistencyTimeout(), storeFactory.getConsistencyTimeoutUnit());
 						LOGGER.trace("Tried to store init value of {} but it already existed", initValue);
 					} else {
-						// We inserted it, wrap it up in ValueVersion class for return
+						// We inserted it, wrap it up in ValueVersion class for
+						// return
 						currentSequenceNumber = new ValueVersion(value, seqVersion);
 						LOGGER.trace("Init value of {} stored.", initValue);
 					}
@@ -123,12 +122,12 @@ public class SequenceDAO {
 	private int handleRequestTimeout(int currWaitMillis, RequestTimeoutException e) {
 		requestTimeouts.inc();
 		try {
-			if (currWaitMillis >= maxTimeoutWait) {
-				LOGGER.debug("MaxTimeoutWait of {} reached: {}", maxTimeoutWait, e.getMessage());
+			if (currWaitMillis >= storeFactory.getMaxTimeoutWait()) {
+				LOGGER.debug("MaxTimeoutWait of {} reached: {}", storeFactory.getMaxTimeoutWait(), e.getMessage());
 				throw e;
 			}
-			Thread.currentThread().wait(attemptTimeoutWait);
-			currWaitMillis += attemptTimeoutWait;
+			Thread.currentThread().wait(storeFactory.getAttemptTimeoutWait());
+			currWaitMillis += storeFactory.getAttemptTimeoutWait();
 			LOGGER.debug("Attempt Timeout Occured: {}", e.getMessage());
 		} catch (InterruptedException ie) {
 			LOGGER.debug("Interruption occured: {}", e.getMessage());
@@ -139,7 +138,7 @@ public class SequenceDAO {
 	private Key getKey(boolean isAlpha) {
 		return (isAlpha) ? alphaKey : digitKey;
 	}
-	
+
 	private String incrementSequence(String current, boolean isAlpha) {
 		if (isAlpha) {
 			return incrementAlphaSequence(current);
@@ -155,7 +154,7 @@ public class SequenceDAO {
 		alphaCounter.inc();
 		return toAlpha(number);
 	}
-	
+
 	private String incrementDigitSequence(String current) {
 		long number;
 		number = Long.parseLong(current);

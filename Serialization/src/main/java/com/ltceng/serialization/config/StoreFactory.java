@@ -22,7 +22,7 @@ import oracle.kv.KVStore;
 import oracle.kv.KVStoreConfig;
 import oracle.kv.KVStoreFactory;
 
-public class NoSqlStoreFactory {
+public class StoreFactory {
 	private KVStore store;
 
 	@NotEmpty
@@ -41,7 +41,7 @@ public class NoSqlStoreFactory {
 	@Max(60000)
 	@JsonProperty("maxTimeoutWait")
 	private int maxTimeoutWait = 5000;
-	
+
 	@Min(1)
 	@Max(10000)
 	@JsonProperty("attemptTimeoutWait")
@@ -63,11 +63,11 @@ public class NoSqlStoreFactory {
 	public int getMaxTimeoutWait() {
 		return maxTimeoutWait;
 	}
-	
+
 	public int getAttemptTimeoutWait() {
 		return attemptTimeoutWait;
 	}
-	
+
 	public KVStore build(Environment environment) {
 		String[] helpers = new String[helperNodes.size()];
 		int i = 0;
@@ -76,8 +76,8 @@ public class NoSqlStoreFactory {
 			i++;
 		}
 		KVStoreConfig kconfig = new KVStoreConfig(getStoreName(), helpers);
-		kconfig.setDurability(getDurabilityPolicy());
-		kconfig.setConsistency(getConsistencyPolicy());
+		kconfig.setDurability(getDurability());
+		kconfig.setConsistency(getConsistency());
 		store = KVStoreFactory.getStore(kconfig);
 		environment.lifecycle().manage(new Managed() {
 			@Override
@@ -92,14 +92,14 @@ public class NoSqlStoreFactory {
 		return store;
 	}
 
-	private Durability getDurabilityPolicy() {
+	public Durability getDurability() {
 		SyncPolicy masterSyncPolicy = SyncPolicy.valueOf(durabilityPolicy.getMasterSyncPolicy());
 		SyncPolicy replicaSyncPolicy = SyncPolicy.valueOf(durabilityPolicy.getReplicaSyncPolicy());
 		ReplicaAckPolicy replicaAckPolicy = ReplicaAckPolicy.valueOf(durabilityPolicy.getReplicaAckPolicy());
 		return new Durability(masterSyncPolicy, replicaSyncPolicy, replicaAckPolicy);
 	}
 
-	private Consistency getConsistencyPolicy() {
+	public Consistency getConsistency() {
 		Consistency consistency = null;
 		String type = consistencyPolicy.getType();
 		switch (type) {
@@ -110,9 +110,13 @@ public class NoSqlStoreFactory {
 			consistency = Consistency.NONE_REQUIRED;
 			break;
 		case "TIME":
-			consistency = new Consistency.Time(consistencyPolicy.getPermissibleLag(),
-					TimeUnit.valueOf(consistencyPolicy.getPermissibleLagUnit()), consistencyPolicy.getTimeout(),
-					TimeUnit.valueOf(consistencyPolicy.getTimeoutUnit()));
+			if (consistencyPolicy.getTimeoutUnit() != null) {
+				consistency = new Consistency.Time(consistencyPolicy.getPermissibleLag(),
+						TimeUnit.valueOf(consistencyPolicy.getPermissibleLagUnit()), consistencyPolicy.getTimeout(),
+						TimeUnit.valueOf(consistencyPolicy.getTimeoutUnit()));
+			} else {
+				throw new IllegalArgumentException("Missing Timeout Unit.");
+			}
 			break;
 		case "ABSOLUTE":
 			consistency = Consistency.ABSOLUTE;
@@ -121,6 +125,24 @@ public class NoSqlStoreFactory {
 			throw new IllegalArgumentException("Invalid type: " + type);
 		}
 		return consistency;
+	}
+
+	public long getConsistencyTimeout() {
+		return consistencyPolicy.getTimeout();
+	}
+
+	public TimeUnit getConsistencyTimeoutUnit() {
+		String timeoutUnit = consistencyPolicy.getTimeoutUnit();
+		return (timeoutUnit == null) ? null : TimeUnit.valueOf(timeoutUnit);
+	}
+
+	public long getDurabilityTimeout() {
+		return durabilityPolicy.getTimeout();
+	}
+
+	public TimeUnit getDurabilityTimeoutUnit() {
+		String timeoutUnit = durabilityPolicy.getTimeoutUnit();
+		return (timeoutUnit == null) ? null : TimeUnit.valueOf(timeoutUnit);
 	}
 
 }

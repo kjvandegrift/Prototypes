@@ -13,7 +13,7 @@ public class SerializationConfiguration extends Configuration {
 	@Valid
     @NotNull
     @JsonProperty("noSqlStore")
-    private NoSqlStoreFactory noSqlStoreFactory = new NoSqlStoreFactory();
+    private StoreFactory noSqlStoreFactory = new StoreFactory();
 
     @Valid
     @NotNull
@@ -29,7 +29,7 @@ public class SerializationConfiguration extends Configuration {
         return httpClient;
     }
 
-	public NoSqlStoreFactory getNoSqlStoreFactory() {
+	public StoreFactory getNoSqlStoreFactory() {
 		return noSqlStoreFactory;
 	}
 	
